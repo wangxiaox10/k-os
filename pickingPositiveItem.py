@@ -13,7 +13,8 @@ def pickingPositiveItem(X, V):
     """1. get obversation matrix X
     and learning model V
     """
-    nUser = 4
+#    nUser = 4
+    nUser = X.shape[0]
 
     
 #    print X
@@ -24,7 +25,7 @@ def pickingPositiveItem(X, V):
     in a list of size K
     """
     i = 1
-    K = 2
+    K = 20
     
     probaDistribution = Pdistribution(i, K)
     nInterest = numericalInterest()
@@ -35,7 +36,7 @@ def pickingPositiveItem(X, V):
     
     #choose user at random
     u = numpy.random.randint(nUser)
-    print "u:", u
+#    print "u:", u
     
     """
     4. Pick K positive items from the Du
@@ -43,10 +44,13 @@ def pickingPositiveItem(X, V):
     #pick K positive items from Du
     lossFunc = lossFunction()
     Du = lossFunc.getDu(X, u)
-    print "Du:", Du
+#    print "Du:", Du
     # OK. Got Du. Next pick K items from Du
-    items = numpy.random.choice(Du, K, replace=False)
-    print "items:", items
+    if( len(Du) >= K):
+        items = numpy.random.choice(Du, K, replace=False)
+    else:
+        items = Du
+#    print "items:", items
     
     """
     5.Compute f_di(u) for each selected item
@@ -67,10 +71,10 @@ def pickingPositiveItem(X, V):
 #    #We need to get the sorted array in descending order 
     sorted_index_and_f = f_order[::-1]
     
-    for o_i in range(K):
-        print o_i + 1, sorted_index_and_f[o_i]
-    
-    print "i:", i, sorted_index_and_f[i-1]
+#    for o_i in range(K):
+#        print o_i + 1, sorted_index_and_f[o_i]
+#    
+#    print "i:", i, sorted_index_and_f[i-1]
     
     """
     7. Pick a position k using the distribution

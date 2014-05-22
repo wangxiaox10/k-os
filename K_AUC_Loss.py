@@ -5,14 +5,19 @@ from lossFunction import *
 from pickingPositiveItem import *
 from numericalInterest import *
 import numpy
+import matplotlib.pyplot as plt
 
-def k_os_AUC_loss():
+def k_os_AUC_loss(X, m):
+    fig1 = plt.figure()
+    axisIteration=[]
+    axisLoss=[]
     """
     1. initialise the model
     """
-    X = preprocessData().getX()
-    m = 2  # learning dimension 
-    n = 4  # number of items 
+#    X = preprocessData().getX()
+#    m = 2  # learning dimension 
+#    n = 4  # number of items 
+    n = X.shape[1]
     V = model(m,n).getV()
     
     """
@@ -27,10 +32,17 @@ def k_os_AUC_loss():
     currentLoss = -1
     countIteration = 0
     while True:
+        
         countIteration+=1
         if currentLoss != -1:
             previousLoss = currentLoss
-            
+        print "iteration:", countIteration, "loss:", previousLoss
+        
+        axisIteration.append(countIteration)
+        axisLoss.append(previousLoss)
+        plt.scatter(axisIteration,axisLoss)
+        plt.draw()
+        
         (u, d) = pickingPositiveItem(X,V)
         
         """

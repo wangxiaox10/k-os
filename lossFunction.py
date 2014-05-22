@@ -46,7 +46,7 @@ class lossFunction:
         normalizator = normalizator * C
         temp2 = 1-index_to_normalize
         normalizator = normalizator + temp2
-        print "nomalizator:", normalizator
+#        print "nomalizator:", normalizator
         V = V * normalizator
         return V
         
@@ -59,7 +59,7 @@ class lossFunction:
         bar_Du = list(set(D) - set(Du))
         
         fu = self.nInterest.f(u, X, V)
-        print "fu:", fu, "Du:", Du
+#        print "fu:", fu, "Du:", Du
         fu_Du = fu[Du]
         fu_bar_Du = fu[bar_Du]
         

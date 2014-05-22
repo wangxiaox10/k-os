@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy
 import scipy.sparse
+from lossFunction import *
 
 class preprocessData:
     def __init__(self):
@@ -32,17 +33,37 @@ class preprocessData:
         self.X = X 
         return X
         
-   def getTrainingData(self):
-       """
-       1. Remove p known ratings
-       2. return X for training
-       3. compare the predicting result with extracted p ratings
-       """
+    def getTrainingData(self, inputFile):
+        """
+        1. Remove p = 5 known ratings
+        2. return X for training
+        3. compare the predicting result with extracted p ratings
+        """
+        
+        X = self.preprocessFile(inputFile)
+        p = 5
+        
+        nUser = X.shape[0]
+        nItem = X.shape[1]
+        
+        lossFunc = lossFunction()
+        testSet = numpy.zeros((nUser, p))
+        
+        for u in range(nUser):
+            Du = lossFunc.getDu(X, u)
+            if( len(Du) <=5 ):
+                print X[u]
+            testSet[u] = numpy.random.choice(Du, p)
+            numpy.delete(X[u], testSet)
+        self.X = X
+        return (X, testSet)
+            
         
     
         
     def getX(self):
         return self.X
         
-p = preprocessData()
-p.preprocessFile("/home/xiao/ProjetLibre/ml-100k/u.data")
+#p = preprocessData()
+##p.preprocessFile("/home/xiao/ProjetLibre/ml-100k/u.data")
+#p.getTrainingData("/home/xiao/ProjetLibre/ml-100k/u.data")
