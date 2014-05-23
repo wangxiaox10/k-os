@@ -8,7 +8,7 @@ def testAUC():
     inputFile = "/home/xiao/ProjetLibre/ml-100/u.data"
     (X, test) = p.getTrainingData(inputFile)
     m = 20
-    k_os_AUC_loss(X, m)
-    predictRanking(test, 5)
+    V = k_os_AUC_loss(X, m)
+    predictRanking(test, 5, X, V)
     
 testAUC()

@@ -24,7 +24,7 @@ def k_os_AUC_loss(X, m):
     2. repeat
     until the error does not improve
     """
-    epsilon  = 0.001
+    epsilon  = 1000
     lossFunc = lossFunction()
     nInterest = numericalInterest()
     
@@ -41,7 +41,8 @@ def k_os_AUC_loss(X, m):
         axisIteration.append(countIteration)
         axisLoss.append(previousLoss)
         plt.scatter(axisIteration,axisLoss)
-        plt.draw()
+#        plt.draw()
+        plt.show()
         
         (u, d) = pickingPositiveItem(X,V)
         
@@ -58,7 +59,7 @@ def k_os_AUC_loss(X, m):
             """
             make a gradient step
             """
-            alpha = 0.1
+            alpha = 0.5
             V = lossFunc.SGD(X, V,u, d, bar_d, alpha)
             """
             Project weights to enforce constraints:
@@ -73,5 +74,5 @@ def k_os_AUC_loss(X, m):
             print "total loss:", currentLoss
             break
         
-    return (X, V)
+    return  V
 #k_os_AUC_loss()
