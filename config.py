@@ -2,8 +2,8 @@
 #import datetime
 
 inputFile = "/home/xiao/ProjetLibre/ml-100/u.data"
-#outputFile = "/home/xiao/remote_dir/k-os/output1"
-outputFile = "output1"
+outputFile = "/home/xiao/remote_dir/k-os/output1"
+#outputFile = "output1"
 fileErrorRate = "output2"
 #dimension of user pattern
 m = 20
@@ -17,3 +17,4 @@ K = 20
 p = 5
 #precision = 10
 precision = 0.0001
+maxIteration = 10000

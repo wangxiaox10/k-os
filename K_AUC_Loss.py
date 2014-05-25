@@ -79,14 +79,15 @@ def k_os_AUC_loss(X, m):
         currentLoss = lossFunc.AUCLoss(X,V)
 
 #        if (numpy.abs(currentLoss - previousLoss)<epsilon):
-        if (numpy.abs(currentLoss - previousLoss)<config.precision):
-            f_output = open(config.outputFile, 'a')
-            resToWrite = "#finish learning," + str(countIteration) + "\n#total loss:" + str(currentLoss)+"\n"
-            f_output.write(resToWrite)
-            f_output.close()
-            print "#finish learning", countIteration
-            print "#total loss:", currentLoss
-            break
+        if (countIteration > config.maxIteration):
+            if (numpy.abs(currentLoss - previousLoss)<config.precision):
+                f_output = open(config.outputFile, 'a')
+                resToWrite = "#finish learning," + str(countIteration) + "\n#total loss:" + str(currentLoss)+"\n"
+                f_output.write(resToWrite)
+                f_output.close()
+                print "#finish learning", countIteration
+                print "#total loss:", currentLoss
+                break
         
     return  V
 #k_os_AUC_loss()
