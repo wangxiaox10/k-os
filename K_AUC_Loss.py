@@ -6,9 +6,10 @@ from pickingPositiveItem import *
 from numericalInterest import *
 import numpy
 import matplotlib.pyplot as plt
+import config
 
 def k_os_AUC_loss(X, m):
-    fig1 = plt.figure()
+#    fig1 = plt.figure()
     axisIteration=[]
     axisLoss=[]
     """
@@ -36,13 +37,14 @@ def k_os_AUC_loss(X, m):
         countIteration+=1
         if currentLoss != -1:
             previousLoss = currentLoss
-        print "iteration:", countIteration, "loss:", previousLoss
+#        print "iteration:", countIteration, "loss:", previousLoss
+        print countIteration, previousLoss
         
         axisIteration.append(countIteration)
         axisLoss.append(previousLoss)
-        plt.scatter(axisIteration,axisLoss)
+#        plt.scatter(axisIteration,axisLoss)
 #        plt.draw()
-        plt.show()
+#        plt.show()
         
         (u, d) = pickingPositiveItem(X,V)
         
@@ -59,7 +61,9 @@ def k_os_AUC_loss(X, m):
             """
             make a gradient step
             """
-            alpha = 0.5
+#            alpha = 0.5
+            alpha = config.alpha
+            
             V = lossFunc.SGD(X, V,u, d, bar_d, alpha)
             """
             Project weights to enforce constraints:

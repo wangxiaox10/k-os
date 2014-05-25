@@ -2,6 +2,7 @@
 import numpy
 import scipy.sparse
 from lossFunction import *
+import config
 
 class preprocessData:
     def __init__(self):
@@ -28,7 +29,7 @@ class preprocessData:
         removeItem = (sumRatingPerItem==0).nonzero()[0]
         X = numpy.delete(X, removeItem, axis=1)
         
-        print X.shape
+#        print X.shape
 #        print len(nUser), len(nItem)
         self.X = X 
         return X
@@ -41,7 +42,7 @@ class preprocessData:
         """
         
         X = self.preprocessFile(inputFile)
-        p = 5
+        p = config.p
         
         nUser = X.shape[0]
         nItem = X.shape[1]
@@ -51,7 +52,7 @@ class preprocessData:
         
         for u in range(nUser):
             Du = lossFunc.getDu(X, u)
-            if( len(Du) <=5 ):
+            if( len(Du) <=p ):
                 print X[u]
             testSet[u] = numpy.random.choice(Du, p)
             numpy.delete(X[u], testSet)

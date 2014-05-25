@@ -6,6 +6,7 @@ from Pdistribution import *
 from preprocessData import *
 from model import *
 from lossFunction import *
+import config
 
 import numpy 
 
@@ -24,8 +25,10 @@ def pickingPositiveItem(X, V):
     of drawing the ith position
     in a list of size K
     """
-    i = 1
-    K = 20
+#    i = 1
+#    K = 20
+    i = config.i
+    K = config.K
     
     probaDistribution = Pdistribution(i, K)
     nInterest = numericalInterest()

@@ -11,7 +11,7 @@ class numericalInterest:
         " V is a m*|D| matrix"  
 #        self.X = X 
 #        self.V = V
-        print "create numericalInterst object"
+#        print "create numericalInterst object"
         
     def f_d(self, d, u, X, V):
         Du = X[u].nonzero()[0]

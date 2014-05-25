@@ -12,7 +12,7 @@ class Pdistribution:
     def __init__(self, i, K):
         self.i = i
         self.K = K
-        print 'create Pdistribution object'
+#        print 'create Pdistribution object'
     
     def uniformeDistribution(self, C):
         return C
