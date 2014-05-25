@@ -12,7 +12,7 @@ def k_os_AUC_loss(X, m):
 #    fig1 = plt.figure()
     axisIteration=[]
     axisLoss=[]
-    f_output = open(config.outputFile, 'w')
+    
     """
     1. initialise the model
     """
@@ -41,7 +41,9 @@ def k_os_AUC_loss(X, m):
 #        print "iteration:", countIteration, "loss:", previousLoss
         print countIteration, previousLoss
         resToWrite = str(countIteration) + " " + str(previousLoss)+"\n"
+        f_output = open(config.outputFile, 'a')
         f_output.write(resToWrite)
+        f_output.close()
         
         axisIteration.append(countIteration)
         axisLoss.append(previousLoss)
@@ -78,6 +80,7 @@ def k_os_AUC_loss(X, m):
 
 #        if (numpy.abs(currentLoss - previousLoss)<epsilon):
         if (numpy.abs(currentLoss - previousLoss)<config.precision):
+            f_output = open(config.outputFile, 'a')
             resToWrite = "#finish learning," + str(countIteration) + "\n#total loss:" + str(currentLoss)+"\n"
             f_output.write(resToWrite)
             f_output.close()

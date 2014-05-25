@@ -3,6 +3,7 @@
 # Date: 25 Mai, 2014
 import config
 import matplotlib.pyplot as plt
+import numpy
 
 def showOutput():
     outputFile = config.outputFile
