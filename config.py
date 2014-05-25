@@ -10,3 +10,5 @@ i = 1
 K = 20
 # number of elements extracted from origin data for test
 p = 5
+
+precision = 0.0001
