@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 inputFile = "/home/xiao/ProjetLibre/ml-100/u.data"
+outputFile = "/home/xiao/remote_dir/k-os/output"
 #dimension of user pattern
 m = 20
 #learning speed 

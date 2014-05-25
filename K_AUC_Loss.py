@@ -25,7 +25,7 @@ def k_os_AUC_loss(X, m):
     2. repeat
     until the error does not improve
     """
-    epsilon  = 1000
+#    epsilon  = 1000
     lossFunc = lossFunction()
     nInterest = numericalInterest()
     
@@ -73,9 +73,10 @@ def k_os_AUC_loss(X, m):
             V = lossFunc.constraintNorm(V, C)
         currentLoss = lossFunc.AUCLoss(X,V)
 
-        if (numpy.abs(currentLoss - previousLoss)<epsilon):
-            print "finish learning", countIteration
-            print "total loss:", currentLoss
+#        if (numpy.abs(currentLoss - previousLoss)<epsilon):
+        if (numpy.abs(currentLoss - previousLoss)<config.precision):
+            print "#finish learning", countIteration
+            print "#total loss:", currentLoss
             break
         
     return  V

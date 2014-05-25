@@ -32,6 +32,6 @@ def predictRanking(test, p, X, V):
                 error += 1
         
 #        print  u+1, f_order, f_u
-    print "error:", error, "percentage: ", (error+0.0)/(nUser * p)
+    print "#error:", error, "percentage: ", (error+0.0)/(nUser * p)
 
 #predictRanking()
