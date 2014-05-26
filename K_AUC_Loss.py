@@ -36,9 +36,15 @@ def k_os_AUC_loss(X, m):
     while True:
         
         countIteration+=1
+        """
+        check first iteration? 
+        """
         if currentLoss != -1:
             previousLoss = currentLoss
 #        print "iteration:", countIteration, "loss:", previousLoss
+        """
+        show result on terminal and stores in output file
+        """
         print countIteration, previousLoss
         resToWrite = str(countIteration) + " " + str(previousLoss)+"\n"
         f_output = open(config.outputFile, 'a')
@@ -50,44 +56,58 @@ def k_os_AUC_loss(X, m):
 #        plt.scatter(axisIteration,axisLoss)
 #        plt.draw()
 #        plt.show()
-        
-        (u, d) = pickingPositiveItem(X,V)
-        
-        """
-        pick a bar_d at random from D\Du
-        """
-        bar_Du = lossFunc.getBarDu(X, u)
-        bar_d = numpy.random.choice(bar_Du)
-        
-        f_d_u = nInterest.f_d(d,u,X,V)
-        f_bar_d_u = nInterest.f_d(bar_d, u, X, V)
-        
-        if (f_bar_d_u > f_d_u -1):
+        lossSum = 0
+        iterationRoundCount = 0
+        for i in range(config.iterationEachRound):
             """
-            make a gradient step
+            pick a positive item d using algorithm 1
             """
-#            alpha = 0.5
-            alpha = config.alpha
+            (u, d) = pickingPositiveItem(X,V)
             
-            V = lossFunc.SGD(X, V,u, d, bar_d, alpha)
             """
-            Project weights to enforce constraints:
-            ensure ||Vi|| <= C
+            pick a bar_d at random from D\Du
             """
-            C = 2
-            V = lossFunc.constraintNorm(V, C)
-        currentLoss = lossFunc.AUCLoss(X,V)
-
+            bar_Du = lossFunc.getBarDu(X, u)
+            bar_d = numpy.random.choice(bar_Du)
+            
+            f_d_u = nInterest.f_d(d,u,X,V)
+            f_bar_d_u = nInterest.f_d(bar_d, u, X, V)
+            
+            if (f_bar_d_u > f_d_u -1):
+                """
+                make a gradient step
+                """
+    #            alpha = 0.5
+                alpha = config.alpha
+                
+                V = lossFunc.SGD(X, V,u, d, bar_d, alpha)
+                """
+                Project weights to enforce constraints:
+                ensure ||Vi|| <= C
+                """
+                C = config.C
+                V = lossFunc.constraintNorm(V, C)
+                
+                currentLoss = lossFunc.AUCLoss(X,V)
+                lossSum += currentLoss
+                iterationRoundCount += 1
+                
+        if( iterationRoundCount > 0):
+            currentLoss = (lossSum + 0.0) / iterationRoundCount
 #        if (numpy.abs(currentLoss - previousLoss)<epsilon):
-        if (countIteration > config.maxIteration):
-            if (numpy.abs(currentLoss - previousLoss)<config.precision):
-                f_output = open(config.outputFile, 'a')
-                resToWrite = "#finish learning," + str(countIteration) + "\n#total loss:" + str(currentLoss)+"\n"
-                f_output.write(resToWrite)
-                f_output.close()
-                print "#finish learning", countIteration
-                print "#total loss:", currentLoss
-                break
+            if (countIteration > config.maxIteration):
+                """
+                if validation error doesn't improve
+                stop the loop
+                """
+                if (numpy.abs(currentLoss - previousLoss)<config.precision):
+                    f_output = open(config.outputFile, 'a')
+                    resToWrite = "#finish learning," + str(countIteration) + "\n#total loss:" + str(currentLoss)+"\n"
+                    f_output.write(resToWrite)
+                    f_output.close()
+                    print "#finish learning", countIteration
+                    print "#total loss:", currentLoss
+                    break
         
     return  V
 #k_os_AUC_loss()
