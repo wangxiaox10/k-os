@@ -80,3 +80,4 @@ def k_os_WARP_loss(X, m):
             print "#finish learning", countIteration
             print "#total loss:", currentLoss
             break
+    return V
