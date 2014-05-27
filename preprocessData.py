@@ -42,6 +42,7 @@ class preprocessData:
         """
         
         X = self.preprocessFile(inputFile)
+        print "&&&X:", X
         p = config.p
         
         nUser = X.shape[0]
@@ -55,8 +56,16 @@ class preprocessData:
             if( len(Du) <=p ):
                 print X[u]
             testSet[u] = numpy.random.choice(Du, p)
-            numpy.delete(X[u], testSet)
+            
+            for test_u in testSet[u]:
+                X[u, test_u] = 0
+#            X[u,testSet[u]] = 0
+            
         self.X = X
+        print "in Pre X:"
+        print X
+        print "in pre test:"
+        print testSet
         return (X, testSet)
             
         

@@ -2,6 +2,11 @@
 # Author : xiao.wang@polytechnique.edu
 # Date : 26 May, 2014
 
+"""
+This file implements Algorithm2 mentioned in the paper. 
+To be tested. 
+"""
+
 from preprocessData import *
 #from model import *
 from K_WARP_Loss import *

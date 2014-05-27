@@ -2,6 +2,10 @@
 
 # Author: xiao.wang@polytechnique.edu
 # Date: 21 May, 2014
+
+"""
+This files implements most used functions. 
+"""
 from numericalInterest import *
 import numpy
 import config
@@ -9,29 +13,27 @@ from numpy import linalg as LA
 
 class lossFunction:
     def __init__(self):
-#        self.X = X 
-#        self.V = V
-        "number of items"
-#        self.n = V.shape[1]
         self.nInterest = numericalInterest()
         
-    """
-    return the set of positived items rated by user u
-    """
+    
     def getDu(self, X, u):
+        """
+        return the set of positived items rated by user u
+        """
         return (X[u]>0).nonzero()[0]
     
-    """
-    return the set un unrated items for user u
-    """
     def getBarDu(self, X, u):
+        """
+        return the set un unrated items for user u
+        """
+
         return (X[u]==0).nonzero()[0]
         
-    
-    """
-    a step of stochastic gradient descend learning algorithm
-    """
+        
     def SGD(self, X, V, u, d, bar_d, alpha):
+        """
+        One-step of stochastic gradient descend learning algorithm
+        """
         Du = self.getDu(X,u)
         derivative_bar_d = numpy.sum(V[:, Du], axis=1)/len(Du)
         derivative_d = (V[:,d]-V[:,bar_d] - numpy.sum(V[:, Du], axis=1))/len(Du)
@@ -40,18 +42,26 @@ class lossFunction:
         V[:,bar_d] = V[:,bar_d] - alpha*derivative_bar_d
         return V
         
-    def constraintNorm(self, V, C):
+    def constraintNorm(self, V):
+        """
+        Check for each j, if the norm of Vj is smaller than C which is defined in config.py
+        if not, do the normalisation: Vj = Vj*C/||Vj||
+        """
         V_norm = LA.norm(V, axis=0)
-        index_to_normalize = (V_norm>C).astype(float)
+        index_to_normalize = (V_norm> config.C).astype(float)
         normalizator = numpy.divide(index_to_normalize, V_norm, dtype=float)
-        normalizator = normalizator * C
+        normalizator = normalizator * config.C
         temp2 = 1-index_to_normalize
         normalizator = normalizator + temp2
-#        print "nomalizator:", normalizator
         V = V * normalizator
         return V
         
     def AUCLoss_u(self,u, X, V):
+        """
+        Computes the loss function for a single user, using AUC algorithm
+        f_auc(u)
+        Use numpy.meshgrid instead of two levels of loops to accelerate the compute
+        """
         Du = self.getDu(X, u)
         
         n = V.shape[1]
@@ -60,7 +70,6 @@ class lossFunction:
         bar_Du = list(set(D) - set(Du))
         
         fu = self.nInterest.f(u, X, V)
-#        print "fu:", fu, "Du:", Du
         fu_Du = fu[Du]
         fu_bar_Du = fu[bar_Du]
         
@@ -70,6 +79,9 @@ class lossFunction:
         return res
         
     def AUCLoss(self, X, V):
+        """
+        compute the loss of all users, using AUC. 
+        """
         nUser = X.shape[0]
         loss = 0
         for u in range(nUser):
@@ -77,6 +89,11 @@ class lossFunction:
         return loss
             
     def WARPLoss_u(self, u, X, V):
+        """
+        Computes the loss function for a single user, using WARP algorithm
+        f_warp(u)
+        """
+        
         resLoss = 0
         for d in self.getDu(X, u):
             resLoss += self.Phi_concave( self.rank(X,V, d, u))
@@ -84,13 +101,16 @@ class lossFunction:
         return resLoss
         
     def WARPLoss(self, X, V):
+        """
+        compute the loss of all users, using AUC. 
+        """
         nUser = X.shape[0]
         loss = 0
         for u in range(nUser):
             loss += self.WARPLoss_u(u, X, V)
             
         return loss
-    
+        
     def Phi_constant(self, eta, C):
         """
         the function converts the rank of a positive item d to a weight
@@ -126,12 +146,3 @@ class lossFunction:
         
         return resCount
                 
-            
-        
-    #def WARPLoss():
-        
-#X = numpy.array([[3,1,2,0],[4,3,4,3],[3,2,1,5], [1,6,5,2]])
-#V = numpy.zeros((2,4))
-#print X, V
-#f = lossFunction()
-#print "AUCLoss:", f.AUCLoss(0, X, V)

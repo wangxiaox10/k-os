@@ -1,38 +1,48 @@
 # -*- coding: utf-8 -*-
 # Author: xiao.wang@polytechnique.edu
 # Date:   22 May, 2014
-from lossFunction import * 
-from pickingPositiveItem import *
-from numericalInterest import *
+
+"""
+This file implements the Algorithm3 in the paper. 
+Being tested in file testAUC.py
+the input is obversation matrix X, test matrix test, m which defines the dimension of matrix V
+the output is V after learning processus 
+"""
+from preprocessData import * 
 import numpy
-import matplotlib.pyplot as plt
 import config
 
-def k_os_AUC_loss(X, m):
-#    fig1 = plt.figure()
-    axisIteration=[]
-    axisLoss=[]
-    
+def k_os_AUC_loss(X, m, test):
+
+    """
+    0. constants
+    """
+    #n number of users
+    n = X.shape[1]
+
+
     """
     1. initialise the model
     """
-#    X = preprocessData().getX()
-#    m = 2  # learning dimension 
-#    n = 4  # number of items 
-    n = X.shape[1]
+    # matrix of approximation to learn
     V = model(m,n).getV()
+    
     
     """
     2. repeat
     until the error does not improve
     """
-#    epsilon  = 1000
+    # object lossFunction to compute the loss etc. 
     lossFunc = lossFunction()
+    # object numericalInterest to compute how a user likes items d
     nInterest = numericalInterest()
     
+    # initial loss before the loop
     previousLoss = lossFunc.AUCLoss(X,V)
+    
     currentLoss = -1
     countIteration = 0
+    
     while True:
         
         countIteration+=1
@@ -41,21 +51,17 @@ def k_os_AUC_loss(X, m):
         """
         if currentLoss != -1:
             previousLoss = currentLoss
-#        print "iteration:", countIteration, "loss:", previousLoss
+
         """
         show result on terminal and stores in output file
         """
+        
         print countIteration, previousLoss
         resToWrite = str(countIteration) + " " + str(previousLoss)+"\n"
         f_output = open(config.outputFile, 'a')
         f_output.write(resToWrite)
         f_output.close()
         
-        axisIteration.append(countIteration)
-        axisLoss.append(previousLoss)
-#        plt.scatter(axisIteration,axisLoss)
-#        plt.draw()
-#        plt.show()
         lossSum = 0
         iterationRoundCount = 0
         for i in range(config.iterationEachRound):
@@ -77,7 +83,6 @@ def k_os_AUC_loss(X, m):
                 """
                 make a gradient step
                 """
-    #            alpha = 0.5
                 alpha = config.alpha
                 
                 V = lossFunc.SGD(X, V,u, d, bar_d, alpha)
@@ -94,7 +99,8 @@ def k_os_AUC_loss(X, m):
                 
         if( iterationRoundCount > 0):
             currentLoss = (lossSum + 0.0) / iterationRoundCount
-#        if (numpy.abs(currentLoss - previousLoss)<epsilon):
+            predictRanking(test, config.p, X, V)
+
             if (countIteration > config.maxIteration):
                 """
                 if validation error doesn't improve
@@ -110,4 +116,3 @@ def k_os_AUC_loss(X, m):
                     break
         
     return  V
-#k_os_AUC_loss()
