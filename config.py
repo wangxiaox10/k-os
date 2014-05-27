@@ -8,7 +8,7 @@
 """
 
 # The complete path of file which stores the information of original observation data
-inputFile = "/home/xiao/ProjetLibre/ml-100/u.data"
+inputFile = "/home/xiao/ProjetLibre/ml-100/test.data"
 # The file which stores the output. Used to map data to graphs and other uses
 outputFile = "output1"
 

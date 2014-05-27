@@ -10,7 +10,8 @@ import numpy
 class numericalInterest:
 
 
-    def __init__(self):
+#    def __init__(self):
+#        self
         
     def f_d(self, d, u, X, V):
         """

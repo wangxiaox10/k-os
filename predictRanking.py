@@ -57,6 +57,7 @@ def predictRanking(test, p, X, V):
     
     print "#error:", error, "percentage: ", (error+0.0)/(nUser * p)
     resStr = "#error:"+ str(error)+", percentage: "+str( (error+0.0)/(nUser * p))
+    resStr += "\n"
     f_output = open(config.outputFile, 'a')
     f_output.write(resStr)
     f_output.close()
