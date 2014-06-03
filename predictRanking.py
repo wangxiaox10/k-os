@@ -51,7 +51,7 @@ def predictRanking(test, p, X, V):
         # f_order stores the index of items in bar_Du
 #        f_order = numpy.argsort(f_u_rating_of_unknown_items)
         f_u_rating_of_unknown_items.sort()
-        f_u_rating_of_unknown_items = f_u_rating_of_unknown_items[::-1]
+#        f_u_rating_of_unknown_items = f_u_rating_of_unknown_items[::-1]
 #        f_order = f_order[::-1] 
         
         """
@@ -59,7 +59,7 @@ def predictRanking(test, p, X, V):
         compute max rank: largest rank of tested items in the recommendation list
         """
         
-        testingItemRank = numpy.searchsorted(f_u_rating_of_unknown_items, f_u_testing_items)
+        testingItemRank = len(f_u_rating_of_unknown_items) - numpy.searchsorted(f_u_rating_of_unknown_items, f_u_testing_items)
         mean_rank = numpy.mean(testingItemRank)
         max_rank = numpy.max(testingItemRank)
         
