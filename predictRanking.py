@@ -34,7 +34,7 @@ def predictRanking(test, p, X, V):
     """
     2. iterate each user
     """
-    print "testing ..."
+#    print "testing ..."
     for u in range(nUser):
         
         # bar_Du: set of unrated items for user u, including test items
@@ -55,11 +55,11 @@ def predictRanking(test, p, X, V):
         for i in test[u]:
             if i not in recommend:
                 error += 1
-        print test[u]
-        print recommend
-        print "\n"
+#        print test[u]
+#        print recommend
+#        print "\n"
         
-    print "End testing ..."
+#    print "End testing ..."
     
     
     print "#error:", error, "percentage: ", (error+0.0)/(nUser * p)
