@@ -15,6 +15,7 @@ import numpy
 
 def showOutput():
     outputFile = config.outputFile
+    outputFile2 = config.outputFile2
     data = numpy.genfromtxt(outputFile, names=['iteration','loss'])    
     iteration = data['iteration']
     loss = data['loss']
@@ -22,3 +23,12 @@ def showOutput():
     fig1 = plt.figure()
     plt.plot(iteration,loss)
     plt.draw()
+    
+    fig2 = plt.figure()
+    rank = numpy.genfromtxt(outputFile2, names=['meanRank', 'maxRank'])
+    meanRankList = rank['meanRank']
+    maxRankList = rank['maxRank']
+    plt.plot( meanRankList, 'r-')
+    plt.plot( maxRankList, 'g-')
+    plt.draw()
+showOutput()

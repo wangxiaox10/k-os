@@ -101,9 +101,11 @@ def k_os_AUC_loss(X, m, test):
                 lossSum += currentLoss
                 iterationRoundCount += 1
                 
+        predictRanking(test, config.p, X, V)     
+        
         if( iterationRoundCount > 0):
             currentLoss = (lossSum + 0.0) / iterationRoundCount
-            predictRanking(test, config.p, X, V)
+            
 
             if (countIteration > config.maxIteration):
                 """

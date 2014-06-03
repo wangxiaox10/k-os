@@ -26,7 +26,6 @@ def testAUC():
     
     
     V = k_os_AUC_loss(X, m, test)
-#    print V
     
     predictRanking(test, config.p, X, V)
     
