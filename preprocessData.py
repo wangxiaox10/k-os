@@ -1,15 +1,23 @@
 # -*- coding: utf-8 -*-
+# Author: xiao.wang@polytechnique.edu
+# Date: 24 Mai, 2014
+
+"""
+The file preprocesses data from file, 
+and generate learning matrix X and test matrix test for further use.
+"""
+
 import numpy
 import scipy.sparse
 from lossFunction import *
 import config
 
 class preprocessData:
-    def __init__(self):
-        # get X from raw data
-        self.X = numpy.array([[3,1,2,0],[0,3,4,3],[3,0,1,5], [1,0,5,2]])
     def preprocessFile(self, inputFile):
         
+        """
+        In the file, each line is stored in the form: user item rating
+        """
         data = numpy.genfromtxt(inputFile, names=['user','item','rating'])
         Users = data['user']
         Items = data['item']
@@ -29,20 +37,17 @@ class preprocessData:
         removeItem = (sumRatingPerItem==0).nonzero()[0]
         X = numpy.delete(X, removeItem, axis=1)
         
-#        print X.shape
-#        print len(nUser), len(nItem)
         self.X = X 
         return X
         
     def getTrainingData(self, inputFile):
         """
-        1. Remove p = 5 known ratings
-        2. return X for training
-        3. compare the predicting result with extracted p ratings
+        1. For each user u, remove p = 5 known ratings from X[u]
+        2. return X for training, testSet for testing
+        3. In test period(in predictRanking.py) we need to compare the predicting result with extracted p ratings
         """
         
         X = self.preprocessFile(inputFile)
-        print "&&&X:", X
         p = config.p
         
         nUser = X.shape[0]
@@ -59,21 +64,11 @@ class preprocessData:
             
             for test_u in testSet[u]:
                 X[u, test_u] = 0
-#            X[u,testSet[u]] = 0
+
             
         self.X = X
-        print "in Pre X:"
-        print X
-        print "in pre test:"
-        print testSet
         return (X, testSet)
-            
-        
-    
         
     def getX(self):
         return self.X
         
-#p = preprocessData()
-##p.preprocessFile("/home/xiao/ProjetLibre/ml-100k/u.data")
-#p.getTrainingData("/home/xiao/ProjetLibre/ml-100k/u.data")

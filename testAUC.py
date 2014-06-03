@@ -10,7 +10,6 @@ to ensure the correctness.
 """
 
 from preprocessData import *
-#from model import *
 from K_AUC_Loss import *
 from predictRanking import * 
 import config
@@ -25,7 +24,10 @@ def testAUC():
     print test
     m = config.m
     
+    
     V = k_os_AUC_loss(X, m, test)
+#    print V
+    
     predictRanking(test, config.p, X, V)
     
 testAUC()

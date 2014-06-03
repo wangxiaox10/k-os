@@ -9,6 +9,11 @@ the input is obversation matrix X, test matrix test, m which defines the dimensi
 the output is V after learning processus 
 """
 from preprocessData import * 
+from model import *
+from lossFunction import * 
+from pickingPositiveItem import *
+from predictRanking import *
+from numericalInterest import *
 import numpy
 import config
 
@@ -25,7 +30,7 @@ def k_os_AUC_loss(X, m, test):
     1. initialise the model
     """
     # matrix of approximation to learn
-    V = model(m,n).getV()
+    V = model.model(m,n).getV()
     
     
     """
@@ -90,8 +95,7 @@ def k_os_AUC_loss(X, m, test):
                 Project weights to enforce constraints:
                 ensure ||Vi|| <= C
                 """
-                C = config.C
-                V = lossFunc.constraintNorm(V, C)
+                V = lossFunc.constraintNorm(V)
                 
                 currentLoss = lossFunc.AUCLoss(X,V)
                 lossSum += currentLoss
@@ -107,6 +111,7 @@ def k_os_AUC_loss(X, m, test):
                 stop the loop
                 """
                 if (numpy.abs(currentLoss - previousLoss)<config.precision):
+                    # write information in file
                     f_output = open(config.outputFile, 'a')
                     resToWrite = "#finish learning," + str(countIteration) + "\n#total loss:" + str(currentLoss)+"\n"
                     f_output.write(resToWrite)

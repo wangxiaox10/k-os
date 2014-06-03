@@ -6,11 +6,13 @@ This files implements the model to numericalise human interest
 and most frequently used functions in this model. 
 """
 import numpy
+import model
 
 class numericalInterest:
 
 
-    def __init__(self):
+#    def __init__(self):
+#        self
         
     def f_d(self, d, u, X, V):
         """
@@ -44,3 +46,29 @@ class numericalInterest:
         res = numpy.dot(numpy.sum(V[:, Du], axis=1), V[:, items])/len(Du)
         return res
     
+
+####Test####
+#data = numpy.genfromtxt(config.inputFile, names=['user','item','rating'])
+#Users = data['user']
+#Items = data['item']
+#Rating = data['rating']
+#        
+#nUser = numpy.unique(Users)
+#nItem = numpy.unique(Items)
+#        
+#X = scipy.sparse.coo_matrix((Rating, (Users,Items)),shape=(max(Users)+1, max(Items)+1))
+#X = X.toarray()
+#
+#sumRatingPerUser = X.sum(axis=1)
+#removeUser = (sumRatingPerUser==0).nonzero()[0]
+#X = numpy.delete(X, removeUser, axis=0)
+#        
+#sumRatingPerItem = X.sum(axis = 0)
+#removeItem = (sumRatingPerItem==0).nonzero()[0]
+#X = numpy.delete(X, removeItem, axis=1)
+#        
+#print X
+#ni = numericalInterest()
+#V = (model.model(5,5)).getV()
+#print V
+#print ni.f_d(0,0,X,V)
