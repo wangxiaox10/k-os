@@ -20,7 +20,7 @@ outputFile2 = "output2-test"
 #dimension of user pattern
 m = 64
 #learning rate
-alpha = 0.01
+alpha = 0.5
 
 
 #order of element to pick. Used in preprocessData.py

@@ -19,6 +19,8 @@ def showOutput():
     data = numpy.genfromtxt(outputFile, names=['iteration','loss'])    
     iteration = data['iteration']
     loss = data['loss']
+    #sorting data
+    loss  = loss[iteration.argsort()]
     
     fig1 = plt.figure()
     plt.plot(iteration,loss)

@@ -16,17 +16,26 @@ import numpy
 def showOutput():
     outputFile = config.outputFile
     outputFile2 = config.outputFile2
-    data = numpy.genfromtxt(outputFile, names=['loss'])    
+    data = numpy.genfromtxt(outputFile, names=['Iteration', 'loss'])   
+    Iteration = data['Iteration']
     loss = data['loss']
+
+    #sorting data
+    loss  = loss[Iteration.argsort()]
     
     fig1 = plt.figure()
-    plt.plot(loss)
+    plt.plot(Iteration.argsort(), loss)
     plt.draw()
     
     fig2 = plt.figure()
-    rank = numpy.genfromtxt(outputFile2, names=['meanRank', 'maxRank'])
+    rank = numpy.genfromtxt(outputFile2, names=['Iteration', 'meanRank', 'maxRank'])
+    Iteration2 = rank['Iteration']
     meanRankList = rank['meanRank']
     maxRankList = rank['maxRank']
+    
+    meanRankList = meanRankList[Iteration2.argsort()]
+    maxRankList = maxRankList[Iteration2.argsort()]
+    
     plt.plot( meanRankList, 'r-')
     plt.plot( maxRankList, 'g-')
     plt.draw()

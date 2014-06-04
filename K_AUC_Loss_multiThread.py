@@ -15,7 +15,7 @@ from preprocessData import *
 from model import *
 from lossFunction import * 
 from pickingPositiveItem import *
-from predictRanking import *
+from predictRanking_multiThread import *
 from numericalInterest import *
 import numpy
 import config
@@ -40,7 +40,8 @@ class multiTaskLeaning_AUCLoss(threading.Thread):
         global mutex
         
         while not self.Terminated:
-            print self.nom, "learning for the ", countIteration, " time"
+            
+            
             lossFunc = lossFunction()
             # object numericalInterest to compute how a user likes items d
             nInterest = numericalInterest()
@@ -61,31 +62,37 @@ class multiTaskLeaning_AUCLoss(threading.Thread):
             f_bar_d_u = nInterest.f_d(bar_d, u, X, V)
             
             if (f_bar_d_u > f_d_u -1):
+#                print self.nom, "learning for the ", currentIteration, " time"
                 countIteration += 1
                 if mutex.acquire(1):
                     V = lossFunc.SGD(X, V,u, d, bar_d, config.alpha)
                     V = lossFunc.constraintNorm(V)
                     mutex.release()
-                    self.observe()
+                    if( currentIteration % 20 == 0):
+                        currentIteration = countIteration
+                        observationThread = computeLossAUC(str(currentIteration))
+                        observationThread.start()
+                        
             if countIteration >= maxIteration:
                 self.Terminated = True
         
+
     def observe(self):
         
         global X
         global V
         global test
-        global countIteration
         #compute aucLoss and rank predictions every few seconds. 
         lossFunc = lossFunction()
+        
+        print "loss:", lossFunc
         # initial loss before the loop
         AUCLoss = lossFunc.AUCLoss(X,V)
         resToWrite = str(AUCLoss)+"\n"
         f_output = open(config.outputFile, 'a')
         f_output.write(resToWrite)
         f_output.close()
-        if( countIteration % 10 == 0):
-            predictRanking(test, config.p, X, V)
+        predictRanking(test, config.p, X, V)
         print self.nom, "finish observing"
     def stop(self): 
         self.Terminated = True
@@ -94,7 +101,6 @@ class computeLossAUC(threading.Thread):
     def __init__(self, nom = ''): 
         threading.Thread.__init__(self) 
         self.nom = nom 
-        self.Terminated = False 
         
         
     def run(self): 
@@ -105,19 +111,17 @@ class computeLossAUC(threading.Thread):
         #compute aucLoss and rank predictions every few seconds. 
         lossFunc = lossFunction()
         # initial loss before the loop
-        AUCLoss = lossFunc.AUCLoss(X,V)
-        resToWrite = str(AUCLoss)+"\n"
+        V_copy = numpy.copy(V)
+        AUCLoss = lossFunc.AUCLoss(X,V_copy)
+        print "loss:", AUCLoss
+        resToWrite = str(self.nom)+ " "+ str(AUCLoss)+"\n"
         f_output = open(config.outputFile, 'a')
         f_output.write(resToWrite)
         f_output.close()
-        predictRanking(test, config.p, X, V)
-        time.sleep(0.05)
+        predictRanking(test, config.p, X, V, self.nom)
         
-    def stop(self): 
-        global counteIteration
-        global maxIteration
-        if counteIteration >= maxIteration:
-            self.Terminated = True
+        
+    
 """
 0. constants
 """
@@ -147,6 +151,8 @@ t2 = multiTaskLeaning_AUCLoss("t2")
 #observer.start()
 t1.start()
 t2.start()
+t1.join()
+t2.join()
 #t3.start()
 #t4.start()
 #time.sleep(10)

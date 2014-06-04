@@ -18,7 +18,7 @@ from K_AUC_Loss import *
 import numpy
 import config
 
-def predictRanking(test, p, X, V):
+def predictRanking(test, p, X, V, numIteration):
     """
     0. constants
     """
@@ -80,8 +80,8 @@ def predictRanking(test, p, X, V):
         
 #    print "End testing ..."
     
-    print "mean_rank:", sumMeanRank, "max_rank:", sumMaxRank
-    resStr =  str(sumMeanRank) + " "+str(sumMaxRank)+"\n"
+    print "Iteration:", numIteration, "mean_rank:", sumMeanRank, "max_rank:", sumMaxRank
+    resStr =  str(numIteration) + " " + str(sumMeanRank) + " "+str(sumMaxRank)+"\n"
 #    print "#error:", error, "percentage: ", (error+0.0)/(nUser * p)
 #    resStr = "#error:"+ str(error)+", percentage: "+str( (error+0.0)/(nUser * p))
 #    resStr += "\n"
