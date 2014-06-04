@@ -13,10 +13,16 @@ inputFile = "/home/xiao/ProjetLibre/ml-100/u.data"
 # The file which stores the output. Used to map data to graphs and other uses
 #outputFile = "output1"
 #outputFile2 = "output2"
-outputFile  = "output1-test"
-outputFile2 = "output2-test"
-#outputFile = "/home/xiao/remote_dir/k-os/output-alpha05-1"
-#outputFile2 = "/home/xiao/remote_dir/k-os/output-alpha05-2"
+#outputFile  = "output1-test"
+#outputFile2 = "output2-test"
+
+#outputFile = "/home/xiao/remote_dir/k-os/output1-test"
+#outputFile2 = "/home/xiao/remote_dir/k-os/output2-test"
+
+outputFile = "/home/xiao/remote_dir/k-os/output1-test-100k"
+outputFile2 = "/home/xiao/remote_dir/k-os/output2-test-100k"
+
+
 #dimension of user pattern
 m = 64
 #learning rate
