@@ -16,12 +16,11 @@ import numpy
 def showOutput():
     outputFile = config.outputFile
     outputFile2 = config.outputFile2
-    data = numpy.genfromtxt(outputFile, names=['iteration','loss'])    
-    iteration = data['iteration']
+    data = numpy.genfromtxt(outputFile, names=['loss'])    
     loss = data['loss']
     
     fig1 = plt.figure()
-    plt.plot(iteration,loss)
+    plt.plot(loss)
     plt.draw()
     
     fig2 = plt.figure()
