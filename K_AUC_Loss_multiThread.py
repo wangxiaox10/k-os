@@ -67,9 +67,9 @@ class multiTaskLeaning_AUCLoss(threading.Thread):
                 if mutex.acquire(1):
                     V = lossFunc.SGD(X, V,u, d, bar_d, config.alpha)
                     V = lossFunc.constraintNorm(V)
+                    currentIteration = countIteration
                     mutex.release()
                     if( currentIteration % 20 == 0):
-                        currentIteration = countIteration
                         observationThread = computeLossAUC(str(currentIteration))
                         observationThread.start()
                         
