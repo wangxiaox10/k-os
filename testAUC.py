@@ -13,21 +13,21 @@ from preprocessData import *
 from K_AUC_Loss import *
 from predictRanking import * 
 import config
-import showOutput
+#import showOutput
 
 def testAUC():
     p = preprocessData()
     inputFile = config.inputFile
     (X, test) = p.getTrainingData(inputFile)
-    print "X:"
-    print X
-    print test
-    m = config.m
-    
-    
-    V = k_os_AUC_loss(X, m, test)
-    
-    predictRanking(test, config.p, X, V)
+#    print "X:"
+#    print X
+#    print test
+#    m = config.m
+#    
+#    
+#    V = k_os_AUC_loss(X, m, test)
+#    
+#    predictRanking(test, config.p, X, V)
     
 testAUC()
-showOutput.showOutput()
+#showOutput.showOutput()

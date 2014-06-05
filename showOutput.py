@@ -34,4 +34,4 @@ def showOutput():
     plt.plot( maxRankList, 'g-')
     plt.draw()
     
-showOutput()
+#showOutput()

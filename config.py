@@ -11,17 +11,20 @@
 #inputFile = "/home/xiao/ProjetLibre/ml-100/test.data"
 inputFile = "/home/xiao/ProjetLibre/ml-100/u.data"
 # The file which stores the output. Used to map data to graphs and other uses
-#outputFile = "output1"
-#outputFile2 = "output2"
+outputFile = "output1-5Jun"
+outputFile2 = "output2-5Jun"
 #outputFile  = "output1-test"
 #outputFile2 = "output2-test"
 
 #outputFile = "/home/xiao/remote_dir/k-os/output1-test"
 #outputFile2 = "/home/xiao/remote_dir/k-os/output2-test"
+#
+#outputFile = "/home/xiao/remote_dir/k-os/output1-test-100k"
+#outputFile2 = "/home/xiao/remote_dir/k-os/output2-test-100k"
 
-outputFile = "/home/xiao/remote_dir/k-os/output1-test-100k"
-outputFile2 = "/home/xiao/remote_dir/k-os/output2-test-100k"
 
+#outputFile = "/home/xiao/remote_dir/k-os/output1-test-100k-2"
+#outputFile2 = "/home/xiao/remote_dir/k-os/output2-test-100k-2"
 
 #dimension of user pattern
 m = 64
@@ -38,7 +41,7 @@ p = 5
 #precision = 10. Decides when to stop the learning
 precision = 0.01
 #works with precision parameter
-maxIteration = 2000
+maxIteration = 1000
 #defines the number of loops the run before comparing current precsion with previous round 
 iterationEachRound = 1
 

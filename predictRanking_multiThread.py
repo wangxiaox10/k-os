@@ -32,7 +32,7 @@ def predictRanking(test, p, X, V, numIteration):
     """
     sumMeanRank = 0
     sumMaxRank = 0
-    
+    precision = 0
     """
     2. iterate each user
     """
@@ -61,10 +61,14 @@ def predictRanking(test, p, X, V, numIteration):
         testingItemRank = len(f_u_rating_of_unknown_items) - numpy.searchsorted(f_u_rating_of_unknown_items, f_u_testing_items)
         mean_rank = numpy.mean(testingItemRank)
         max_rank = numpy.max(testingItemRank)
+        min_rank = numpy.min(testingItemRank)
+        
         
         sumMeanRank += mean_rank
         sumMaxRank += max_rank
         
+        if min_rank <= 10:
+            precision += numpy.count_nonzero(testingItemRank <= 10)
 #        '''
 #        recommend 2*p items 
 #        '''
@@ -81,7 +85,7 @@ def predictRanking(test, p, X, V, numIteration):
 #    print "End testing ..."
     
     print "Iteration:", numIteration, "mean_rank:", sumMeanRank, "max_rank:", sumMaxRank
-    resStr =  str(numIteration) + " " + str(sumMeanRank) + " "+str(sumMaxRank)+"\n"
+    resStr =  str(numIteration) + " " + str(sumMeanRank) + " "+str(sumMaxRank)+" "+str(precision)+"\n"
 #    print "#error:", error, "percentage: ", (error+0.0)/(nUser * p)
 #    resStr = "#error:"+ str(error)+", percentage: "+str( (error+0.0)/(nUser * p))
 #    resStr += "\n"

@@ -67,6 +67,7 @@ class preprocessData:
 
             
         self.X = X
+        print "X's shape:", X.shape
         return (X, testSet)
         
     def getX(self):

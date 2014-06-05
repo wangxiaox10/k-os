@@ -63,10 +63,11 @@ class multiTaskLeaning_AUCLoss(threading.Thread):
             
             if (f_bar_d_u > f_d_u -1):
 #                print self.nom, "learning for the ", currentIteration, " time"
-                countIteration += 1
+                
                 if mutex.acquire(1):
                     V = lossFunc.SGD(X, V,u, d, bar_d, config.alpha)
                     V = lossFunc.constraintNorm(V)
+                    countIteration += 1
                     currentIteration = countIteration
                     mutex.release()
                     if( currentIteration % 20 == 0):
