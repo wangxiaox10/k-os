@@ -32,7 +32,8 @@ def predictRanking(test, p, X, V, numIteration):
     """
     sumMeanRank = 0
     sumMaxRank = 0
-    precision = 0
+    precisionAt1 = 0
+    precisionAt10 = 0
     """
     2. iterate each user
     """
@@ -44,7 +45,7 @@ def predictRanking(test, p, X, V, numIteration):
         bar_Du = lossFunc.getBarDu(X, u)
         
         f_u_testing_items = nInterest.f_set(test[u].astype(int), u, X, V)
-        # interest rates for these items 
+        # interest rates for these items
         f_u_rating_of_unknown_items = nInterest.f_set(bar_Du, u, X, V)
         # order the items in descending order on corresponding value
         # f_order stores the index of items in bar_Du
@@ -67,8 +68,8 @@ def predictRanking(test, p, X, V, numIteration):
         sumMeanRank += mean_rank
         sumMaxRank += max_rank
         
-        if min_rank <= 5:
-            precision += numpy.count_nonzero(testingItemRank <= 5)
+        precisionAt1 += numpy.count_nonzero(testingItemRank <= 1)
+        precisionAt10 += numpy.count_nonzero(testingItemRank <= 10)
 #        '''
 #        recommend 2*p items 
 #        '''
@@ -84,8 +85,8 @@ def predictRanking(test, p, X, V, numIteration):
         
 #    print "End testing ..."
     
-    print "Iteration:", numIteration, "mean_rank:", sumMeanRank, "max_rank:", sumMaxRank
-    resStr =  str(numIteration) + " " + str(sumMeanRank) + " "+str(sumMaxRank)+" "+str(precision)+"\n"
+    print "Iteration:", numIteration, "mean_rank:", sumMeanRank, "max_rank:", sumMaxRank, "precision@1", precisionAt1, "precision@10", precisionAt10
+    resStr =  str(numIteration) + " " + str(sumMeanRank) + " "+str(sumMaxRank)+" "+str(precisionAt1)+" "+ str(precisionAt10)+"\n"
 #    print "#error:", error, "percentage: ", (error+0.0)/(nUser * p)
 #    resStr = "#error:"+ str(error)+", percentage: "+str( (error+0.0)/(nUser * p))
 #    resStr += "\n"

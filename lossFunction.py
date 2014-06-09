@@ -111,7 +111,8 @@ class lossFunction:
         loss = 0
         sumMeanRank = 0
         sumMaxRank = 0
-        precision = 0
+        precisionAt1 = 0
+        precisionAt10 = 0
         
         for u in range(nUser):
             Du = self.getDu(X, u)
@@ -136,6 +137,7 @@ class lossFunction:
             f_u_testing_items = fu[test[u].astype(int)]
             fu_bar_Du.sort()
             testingItemRank = len(fu_bar_Du) - numpy.searchsorted(fu_bar_Du, f_u_testing_items)
+            
             mean_rank = numpy.mean(testingItemRank)
             max_rank = numpy.max(testingItemRank)
             
@@ -143,10 +145,11 @@ class lossFunction:
             sumMeanRank += mean_rank
             sumMaxRank += max_rank
             
-            precision += numpy.count_nonzero(testingItemRank <= config.atPrecision)
+            precisionAt1 += numpy.count_nonzero(testingItemRank <= 1)
+            precisionAt10 += numpy.count_nonzero(testingItemRank <= 10)
                 
-        print "Iteration:", numIteration, "mean_rank:", sumMeanRank, "max_rank:", sumMaxRank, "precision:", precision
-        resStr =  str(numIteration) + " " + str(sumMeanRank) + " "+str(sumMaxRank)+" "+str(precision)+"\n"
+        print "Iteration:", numIteration, "mean_rank:", sumMeanRank, "max_rank:", sumMaxRank, "precision@1:", precisionAt1, "precision@10:", precisionAt10
+        resStr =  str(numIteration) + " " + str(sumMeanRank) + " "+str(sumMaxRank)+" "+str(precisionAt1)+" " + str(precisionAt10) +"\n"
     
         f_output = open(config.outputFile2, 'a')
         f_output.write(resStr)
