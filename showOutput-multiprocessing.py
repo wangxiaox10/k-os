@@ -28,12 +28,12 @@ def showOutput():
     plt.draw()
     
     fig2 = plt.figure()
-#    rank = numpy.genfromtxt(outputFile2, names=['Iteration', 'meanRank', 'maxRank', 'precisionAt10'])
-    rank = numpy.genfromtxt(outputFile2, names=['Iteration', 'meanRank', 'maxRank','precisionAt1', 'precisionAt10'])
+    rank = numpy.genfromtxt(outputFile2, names=['Iteration', 'meanRank', 'maxRank', 'precisionAt10'])
+#    rank = numpy.genfromtxt(outputFile2, names=['Iteration', 'meanRank', 'maxRank','precisionAt1', 'precisionAt10'])
     Iteration2 = rank['Iteration']
     meanRankList = rank['meanRank']
     maxRankList = rank['maxRank']
-    precisionAt1List = rank['precisionAt1']
+#    precisionAt1List = rank['precisionAt1']
     precisionAt10List = rank['precisionAt10']
     
     meanRankList = meanRankList[Iteration2.argsort()]
@@ -44,7 +44,7 @@ def showOutput():
     plt.draw()
     
     fig3 = plt.figure()
-    plt.plot(precisionAt1List, 'y-')
+#    plt.plot(precisionAt1List, 'y-')
     plt.plot(precisionAt10List, 'b-')
     
     plt.draw()

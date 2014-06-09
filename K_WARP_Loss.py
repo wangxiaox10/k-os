@@ -8,8 +8,6 @@ import lossFunction
 
 def k_os_WARP_loss(X, m):
     #lists that stores (iteration, loss at an iteration)
-    axisIteration=[]
-    axisLoss=[]
     
     lossFunc = lossFunction.lossFunction()
     """

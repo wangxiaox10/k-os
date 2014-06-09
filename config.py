@@ -11,8 +11,9 @@
 #inputFile = "/home/xiao/ProjetLibre/ml-100/test.data"
 inputFile = "/home/xiao/ProjetLibre/ml-100/u.data"
 # The file which stores the output. Used to map data to graphs and other uses
-outputFile = "output1-9Jun"
-outputFile2 = "output2-9Jun"
+
+#outputFile = "output1-9Jun"
+#outputFile2 = "output2-9Jun"
 
 
 #outputFile  = "output1-test"
@@ -21,8 +22,8 @@ outputFile2 = "output2-9Jun"
 #outputFile = "/home/xiao/remote_dir/k-os/output1-test"
 #outputFile2 = "/home/xiao/remote_dir/k-os/output2-test"
 #
-#outputFile = "/home/xiao/remote_dir/k-os/output1-100k-9Jun"
-#outputFile2 = "/home/xiao/remote_dir/k-os/output2-100k-9Jun"
+outputFile = "/home/xiao/remote_dir/k-os/output1-100k-9Jun-2"
+outputFile2 = "/home/xiao/remote_dir/k-os/output2-100k-9Jun-2"
 
 
 #outputFile = "/home/xiao/remote_dir/k-os/output1-test-100k-3"
