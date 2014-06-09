@@ -12,8 +12,8 @@
 inputFile = "/home/xiao/ProjetLibre/ml-100/u.data"
 # The file which stores the output. Used to map data to graphs and other uses
 
-#outputFile = "output1-9Jun"
-#outputFile2 = "output2-9Jun"
+outputFile = "output1-9Jun"
+outputFile2 = "output2-9Jun"
 
 
 #outputFile  = "output1-test"
@@ -21,9 +21,9 @@ inputFile = "/home/xiao/ProjetLibre/ml-100/u.data"
 
 #outputFile = "/home/xiao/remote_dir/k-os/output1-test"
 #outputFile2 = "/home/xiao/remote_dir/k-os/output2-test"
-#
-outputFile = "/home/xiao/remote_dir/k-os/output1-100k-9Jun-2"
-outputFile2 = "/home/xiao/remote_dir/k-os/output2-100k-9Jun-2"
+
+#outputFile = "/home/xiao/remote_dir/k-os/output1-100k-9Jun-2"
+#outputFile2 = "/home/xiao/remote_dir/k-os/output2-100k-9Jun-2"
 
 
 #outputFile = "/home/xiao/remote_dir/k-os/output1-test-100k-3"
@@ -32,7 +32,7 @@ outputFile2 = "/home/xiao/remote_dir/k-os/output2-100k-9Jun-2"
 #dimension of user pattern
 m = 64
 #learning rate
-alpha = 0.1
+alpha = 0.5
 
 
 #order of element to pick. Used in preprocessData.py
@@ -44,7 +44,7 @@ p = 5
 #precision = 10. Decides when to stop the learning
 precision = 0.01
 #works with precision parameter
-maxIteration = 10000
+maxIteration = 15000
 #defines the number of loops the run before comparing current precsion with previous round 
 iterationEachRound = 1
 

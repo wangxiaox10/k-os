@@ -35,6 +35,7 @@ class lossFunction:
         """
         One-step of stochastic gradient descend learning algorithm
         """
+        
         Du = self.getDu(X,u)
         derivative_bar_d = numpy.sum(V[:, Du], axis=1)/len(Du)
         V[:,bar_d] = V[:,bar_d] - alpha*derivative_bar_d
@@ -48,6 +49,23 @@ class lossFunction:
         V[:,d] = V[:,d] - alpha*derivative_d_plus
         
         return V
+        
+        
+    def SGD_Warp(self, X, V, u, d, bar_d, alpha, n):
+        
+        Du = self.getDu(X,u)
+        derivative_bar_d = numpy.sum(V[:, Du], axis=1)/len(Du)
+        V[:,bar_d] = V[:,bar_d] - alpha*derivative_bar_d
+        
+        derivative_i = (V[:,bar_d] - V[:, d])/len(Du)
+        for i in Du:
+            V[:,i] = V[:, i] - alpha * derivative_i
+        
+#        derivative_d = (V[:,d]-V[:,bar_d] - numpy.sum(V[:, Du], axis=1))/len(Du)
+        derivative_d_plus =  (- numpy.sum(V[:, Du], axis=1))/len(Du)
+        V[:,d] = V[:,d] - self.Phi_concave(n) * alpha * derivative_d_plus
+        
+        
         
     def constraintNorm(self, V):
         """
@@ -70,7 +88,6 @@ class lossFunction:
         f_auc(u)
         Use numpy.meshgrid instead of two levels of loops to accelerate the compute
         """
-        
         
 #        n = V.shape[1]
 #        D = numpy.arange(n)
@@ -99,6 +116,69 @@ class lossFunction:
         for u in range(nUser):
             loss += self.AUCLoss_u(u, X, V)
         return loss
+        
+        
+    def combinedWARPLoss_Prediction(self, X, V, test, numIteration):
+        nUser = X.shape[0]
+        nInterest = numericalInterest()
+        
+        """
+        1. initialisation
+        """
+        
+        loss = 0
+        sumMeanRank = 0
+        sumMaxRank = 0
+        precisionAt1 = 0
+        precisionAt10 = 0
+        
+        for u in range(nUser):
+            Du = self.getDu(X, u)
+            bar_Du = self.getBarDu(X, u)
+        
+            fu = nInterest.f(u,X,V)
+            fu_Du = fu[Du]
+            fu_bar_Du = fu[bar_Du]
+            
+            '''
+            Part 1: compute WARPLoss_u
+            '''
+            
+            res_Du, res_bar_Du = numpy.meshgrid(fu_bar_Du, fu_Du)
+            funcG = 1 - res_Du + res_bar_Du
+            
+            #res = (funcG[(funcG>0).nonzero()])
+            res_temp = bincount(((funcG>0).nonzero())[0])
+            res = self.Phi_array(res_temp)
+
+            loss += sum(res)
+            
+            """
+            Part 2: compute prediction
+            """
+            f_u_testing_items = fu[test[u].astype(int)]
+            fu_bar_Du.sort()
+            testingItemRank = len(fu_bar_Du) - numpy.searchsorted(fu_bar_Du, f_u_testing_items)
+            
+            mean_rank = numpy.mean(testingItemRank)
+            max_rank = numpy.max(testingItemRank)
+            
+            
+            sumMeanRank += mean_rank
+            sumMaxRank += max_rank
+            
+            precisionAt1 += numpy.count_nonzero(testingItemRank <= 1)
+            precisionAt10 += numpy.count_nonzero(testingItemRank <= 10)
+                
+        print "Iteration:", numIteration, "mean_rank:", sumMeanRank, "max_rank:", sumMaxRank, "precision@1:", precisionAt1, "precision@10:", precisionAt10
+        resStr =  str(numIteration) + " " + str(sumMeanRank) + " "+str(sumMaxRank)+" "+str(precisionAt1)+" " + str(precisionAt10) +"\n"
+    
+        f_output = open(config.outputFile2, 'a')
+        f_output.write(resStr)
+        f_output.close()
+        
+        return loss
+        
         
     def combinedAUCLoss_Prediction(self, X, V, test, numIteration):
         nUser = X.shape[0]
@@ -163,12 +243,12 @@ class lossFunction:
         Computes the loss function for a single user, using WARP algorithm
         f_warp(u)
         """
-        
         resLoss = 0
         for d in self.getDu(X, u):
-            resLoss += self.Phi_concave( self.rank(X,V, d, u))
-            
+            resLoss += self.Phi_concave(self.rank(X,V, d, u))
+
         return resLoss
+
         
     def WARPLoss(self, X, V):
         """
@@ -187,6 +267,13 @@ class lossFunction:
         Phi(eta) = C * eta
         """
         return eta * C
+        
+    def Phi_array(self, a):
+        res = zeros(len(a))
+        
+        for i in range( len(a)):
+            res[i] = self.Phi_concave(a[i])
+        return res
         
     def Phi_concave(self, eta):
         """
