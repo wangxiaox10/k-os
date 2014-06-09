@@ -67,8 +67,8 @@ def predictRanking(test, p, X, V, numIteration):
         sumMeanRank += mean_rank
         sumMaxRank += max_rank
         
-        if min_rank <= 10:
-            precision += numpy.count_nonzero(testingItemRank <= 10)
+        if min_rank <= 5:
+            precision += numpy.count_nonzero(testingItemRank <= 5)
 #        '''
 #        recommend 2*p items 
 #        '''

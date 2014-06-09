@@ -78,23 +78,6 @@ class multiTaskLeaning_AUCLoss(threading.Thread):
                 self.Terminated = True
         
 
-    def observe(self):
-        
-        global X
-        global V
-        global test
-        #compute aucLoss and rank predictions every few seconds. 
-        lossFunc = lossFunction()
-        
-        print "loss:", lossFunc
-        # initial loss before the loop
-        AUCLoss = lossFunc.AUCLoss(X,V)
-        resToWrite = str(AUCLoss)+"\n"
-        f_output = open(config.outputFile, 'a')
-        f_output.write(resToWrite)
-        f_output.close()
-        predictRanking(test, config.p, X, V)
-        print self.nom, "finish observing"
     def stop(self): 
         self.Terminated = True
         
@@ -113,19 +96,21 @@ class computeLossAUC(threading.Thread):
         lossFunc = lossFunction()
         # initial loss before the loop
         V_copy = numpy.copy(V)
-        AUCLoss = lossFunc.AUCLoss(X,V_copy)
-        print "loss:", AUCLoss
+#        AUCLoss = lossFunc.AUCLoss(X,V_copy)
+        AUCLoss = lossFunc.combinedAUCLoss_Prediction(X,V_copy, test, self.nom)
+        print self.nom, "loss:", AUCLoss
         resToWrite = str(self.nom)+ " "+ str(AUCLoss)+"\n"
         f_output = open(config.outputFile, 'a')
         f_output.write(resToWrite)
         f_output.close()
-        predictRanking(test, config.p, X, V, self.nom)
+#        predictRanking(test, config.p, X, V, self.nom)
         
         
     
 """
 0. constants
 """
+startTime = time.time()
 p = preprocessData()
 inputFile = config.inputFile
 (X, test) = p.getTrainingData(inputFile)
@@ -146,14 +131,19 @@ V = model.model(m,n).getV()
     
 t1 = multiTaskLeaning_AUCLoss("t1")
 t2 = multiTaskLeaning_AUCLoss("t2")
-#t3 = multiTaskLeaning_AUCLoss("t3")
-#t4 = multiTaskLeaning_AUCLoss("t4")
+t3 = multiTaskLeaning_AUCLoss("t3")
+t4 = multiTaskLeaning_AUCLoss("t4")
 #observer = computeLossAUC("ob")
 #observer.start()
 t1.start()
 t2.start()
+t3.start()
+t4.start()
+
 t1.join()
 t2.join()
+t3.join()
+t4.join()
 #t3.start()
 #t4.start()
 #time.sleep(10)
@@ -169,3 +159,4 @@ f_output.write(resToWrite)
 f_output.close()
 #print "#finish learning", countIteration
 print "#total loss:", AUCLoss
+print "#time consumed:", time.time()-startTime

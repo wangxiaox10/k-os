@@ -11,8 +11,8 @@
 #inputFile = "/home/xiao/ProjetLibre/ml-100/test.data"
 inputFile = "/home/xiao/ProjetLibre/ml-100/u.data"
 # The file which stores the output. Used to map data to graphs and other uses
-outputFile = "output1-5Jun"
-outputFile2 = "output2-5Jun"
+outputFile = "output1-9Jun"
+outputFile2 = "output2-9Jun"
 #outputFile  = "output1-test"
 #outputFile2 = "output2-test"
 
@@ -23,8 +23,8 @@ outputFile2 = "output2-5Jun"
 #outputFile2 = "/home/xiao/remote_dir/k-os/output2-test-100k"
 
 
-#outputFile = "/home/xiao/remote_dir/k-os/output1-test-100k-2"
-#outputFile2 = "/home/xiao/remote_dir/k-os/output2-test-100k-2"
+#outputFile = "/home/xiao/remote_dir/k-os/output1-test-100k-3"
+#outputFile2 = "/home/xiao/remote_dir/k-os/output2-test-100k-3"
 
 #dimension of user pattern
 m = 64
@@ -41,9 +41,11 @@ p = 5
 #precision = 10. Decides when to stop the learning
 precision = 0.01
 #works with precision parameter
-maxIteration = 1000
+maxIteration = 200
 #defines the number of loops the run before comparing current precsion with previous round 
 iterationEachRound = 1
 
 #Constraint C. C defines max norm of Vj
 C = 1
+
+atPrecision = 10

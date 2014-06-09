@@ -10,6 +10,7 @@ from Pdistribution import *
 from preprocessData import *
 from model import *
 from lossFunction import *
+from numericalInterest import * 
 import config
 
 import numpy 
@@ -42,7 +43,6 @@ def pickingPositiveItem(X, V):
     """
     4. Pick K positive items from the Du
     """
-
     lossFunc = lossFunction()
     Du = lossFunc.getDu(X, u)
 
@@ -69,5 +69,5 @@ def pickingPositiveItem(X, V):
     7. Pick a position k using the distribution
     """
     res_k = probaDistribution.chooseOneDistribution()
-    return (u,sorted_index_and_f[res_k-1])
+    return (u,items[sorted_index_and_f[res_k-1]])
     

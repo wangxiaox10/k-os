@@ -99,6 +99,61 @@ class lossFunction:
         for u in range(nUser):
             loss += self.AUCLoss_u(u, X, V)
         return loss
+        
+    def combinedAUCLoss_Prediction(self, X, V, test, numIteration):
+        nUser = X.shape[0]
+        
+        nInterest = numericalInterest()
+        
+        """
+        1. initialisation
+        """
+        loss = 0
+        sumMeanRank = 0
+        sumMaxRank = 0
+        precision = 0
+        
+        for u in range(nUser):
+            Du = self.getDu(X, u)
+            bar_Du = self.getBarDu(X, u)
+        
+            fu = nInterest.f(u,X,V)
+            fu_Du = fu[Du]
+            fu_bar_Du = fu[bar_Du]
+            
+            '''
+            Part 1: compute AUCCLoss_u
+            '''
+            res_Du, res_bar_Du = numpy.meshgrid(fu_Du, fu_bar_Du)
+            funcG = 1 - res_Du + res_bar_Du
+            res = sum(funcG[(funcG>0).nonzero()])
+
+            loss += res
+            
+            """
+            Part 2: compute prediction
+            """
+            f_u_testing_items = fu[test[u].astype(int)]
+            fu_bar_Du.sort()
+            testingItemRank = len(fu_bar_Du) - numpy.searchsorted(fu_bar_Du, f_u_testing_items)
+            mean_rank = numpy.mean(testingItemRank)
+            max_rank = numpy.max(testingItemRank)
+            
+            
+            sumMeanRank += mean_rank
+            sumMaxRank += max_rank
+            
+            precision += numpy.count_nonzero(testingItemRank <= config.atPrecision)
+                
+        print "Iteration:", numIteration, "mean_rank:", sumMeanRank, "max_rank:", sumMaxRank, "precision:", precision
+        resStr =  str(numIteration) + " " + str(sumMeanRank) + " "+str(sumMaxRank)+" "+str(precision)+"\n"
+    
+        f_output = open(config.outputFile2, 'a')
+        f_output.write(resStr)
+        f_output.close()
+        
+        return loss
+        
             
     def WARPLoss_u(self, u, X, V):
         """
