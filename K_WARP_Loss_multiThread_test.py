@@ -112,7 +112,8 @@ class computeLossWARP(threading.Thread):
         # initial loss before the loop
         V_copy = numpy.copy(V)
 #        AUCLoss = lossFunc.AUCLoss(X,V_copy)
-        WARPLoss = lossFunc.combinedWARPLoss_Prediction(X,V_copy, test, self.nom)
+#        WARPLoss = lossFunc.combinedWARPLoss_Prediction(X,V_copy, test, self.nom)
+        WARPLoss = lossFunc.comb_k_os_WARPLoss_Prediction(X,V_copy, test, self.nom)
         print self.nom, "loss:", WARPLoss
         resToWrite = str(self.nom)+ " "+ str(WARPLoss)+"\n"
         f_output = open(config.outputFile, 'a')
@@ -161,7 +162,7 @@ t4.join()
 
 lossFunc = lossFunction()
         # initial loss before the loop
-WARPLoss = lossFunc.WARPLoss(X,V)
+WARPLoss = lossFunc.k_os_WARPLoss(X,V)
 
 
 resToWrite = "#total loss:" + str(WARPLoss)+"\n"

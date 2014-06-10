@@ -120,6 +120,67 @@ class lossFunction:
             loss += self.AUCLoss_u(u, X, V)
         return loss
         
+    
+    def comb_k_os_WARPLoss_Prediction(self, X, V, test, numIteration):
+        nUser = X.shape[0]
+        nInterest = numericalInterest()
+        
+        """
+        1. initialisation
+        """
+        
+        loss = 0
+        sumMeanRank = 0
+        sumMaxRank = 0
+        precisionAt1 = 0
+        precisionAt10 = 0
+        
+        for u in range(nUser):
+            Du = self.getDu(X, u)
+            bar_Du = self.getBarDu(X, u)
+        
+            fu = nInterest.f(u,X,V)
+            fu_Du = fu[Du]
+            fu_bar_Du = fu[bar_Du]
+            
+            '''
+            Part 1: compute WARPLoss_u
+            '''
+            fu_Du_ordered = fu_Du.argsort()
+            index_choisi = fu_Du_ordered[0-config.i]
+            
+            funcG = 1 + fu_bar_Du - fu_Du[index_choisi]
+            
+            res_temp = len(((funcG>=0).nonzero())[0])
+            res = self.Phi_concave(res_temp)
+            
+            loss += res
+            
+            """
+            Part 2: compute prediction
+            """
+            f_u_testing_items = fu[test[u].astype(int)]
+            fu_bar_Du.sort()
+            testingItemRank = len(fu_bar_Du) - numpy.searchsorted(fu_bar_Du, f_u_testing_items)
+            
+            mean_rank = numpy.mean(testingItemRank)
+            max_rank = numpy.max(testingItemRank)
+            
+            
+            sumMeanRank += mean_rank
+            sumMaxRank += max_rank
+            
+            precisionAt1 += numpy.count_nonzero(testingItemRank <= 1)
+            precisionAt10 += numpy.count_nonzero(testingItemRank <= 10)
+                
+        print "Iteration:", numIteration, "mean_rank:", sumMeanRank, "max_rank:", sumMaxRank, "precision@1:", precisionAt1, "precision@10:", precisionAt10
+        resStr =  str(numIteration) + " " + str(sumMeanRank) + " "+str(sumMaxRank)+" "+str(precisionAt1)+" " + str(precisionAt10) +"\n"
+    
+        f_output = open(config.outputFile2, 'a')
+        f_output.write(resStr)
+        f_output.close()
+        
+        return loss
         
     def combinedWARPLoss_Prediction(self, X, V, test, numIteration):
         nUser = X.shape[0]
@@ -240,7 +301,36 @@ class lossFunction:
         
         return loss
         
+    
+    def k_os_WARPLoss_u(self, u, X, V):
+        """
+        Computes the loss function for a single user, using WARP algorithm
+        f_warp(u)
+        """      
+        nInterest = numericalInterest()
+        loss = 0
+        Du = self.getDu(X, u)
+        bar_Du = self.getBarDu(X, u)
+        
+        fu = nInterest.f(u,X,V)
+        fu_Du = fu[Du]
+        fu_bar_Du = fu[bar_Du]
             
+        '''
+        Part 1: compute WARPLoss_u
+        '''
+        fu_Du_ordered = fu_Du.argsort()
+        index_choisi = fu_Du_ordered[0-config.i]
+            
+        funcG = 1 + fu_bar_Du - fu_Du[index_choisi]
+            
+        res_temp = len(((funcG>=0).nonzero())[0])
+        res = self.Phi_concave(res_temp)
+            
+        loss += res
+        
+        return loss
+        
     def WARPLoss_u(self, u, X, V):
         """
         Computes the loss function for a single user, using WARP algorithm
@@ -277,6 +367,18 @@ class lossFunction:
 
         return loss
 
+    def k_os_WARPLoss(self, X, V):
+        """
+        compute the loss of all users, using AUC. 
+        """
+        nUser = X.shape[0]
+        loss = 0
+        for u in range(nUser):
+            loss += self.k_os_WARPLoss_u(u, X, V)
+            
+        return loss
+
+        
         
     def WARPLoss(self, X, V):
         """

@@ -14,15 +14,15 @@ inputFile = "/home/xiao/ProjetLibre/ml-100/u.data"
 
 #outputFile = "/home/xiao/test1/8/output1-100k-9Jun"
 #outputFile2 = "/home/xiao/test1/8/output2-100k-9Jun"
-outputFile = "output1-10Jun"
-outputFile2 = "output2-10Jun"
+outputFile = "output1-11Jun"
+outputFile2 = "output2-11Jun"
 
 
 #outputFile  = "output1-test"
 #outputFile2 = "output2-test"
-
-#outputFile = "/home/xiao/remote_dir/k-os/output1-test"
-#outputFile2 = "/home/xiao/remote_dir/k-os/output2-test"
+#
+#outputFile = "/home/xiao/remote_dir/k-os/output1-10Jun-3"
+#outputFile2 = "/home/xiao/remote_dir/k-os/output2-10Jun-3"
 
 #outputFile = "/home/xiao/remote_dir/k-os/output1-100k-9Jun-2"
 #outputFile2 = "/home/xiao/remote_dir/k-os/output2-100k-9Jun-2"
@@ -46,7 +46,7 @@ p = 5
 #precision = 10. Decides when to stop the learning
 precision = 0.01
 #works with precision parameter
-maxIteration = 1000
+maxIteration = 100
 #defines the number of loops the run before comparing current precsion with previous round 
 iterationEachRound = 1
 
