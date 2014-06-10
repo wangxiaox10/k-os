@@ -24,7 +24,7 @@ def showOutput():
     loss  = loss[Iteration.argsort()]
     
     fig1 = plt.figure()
-    plt.plot(Iteration.argsort(), loss)
+    plt.plot(Iteration[Iteration.argsort()], loss)
     plt.draw()
     
     fig2 = plt.figure()

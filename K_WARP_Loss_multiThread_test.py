@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-# -*- coding: utf-8 -*-
 """
 Since every step is independent from each other
 Use threads to accelerate the learning speed.
@@ -36,52 +34,54 @@ class multiTaskLeaning_WARPLoss(threading.Thread):
         
         
     def run(self): 
-        global X
         global V
         global maxIteration
         global countIteration
         global mutex
         
         while not self.Terminated:
+            
+            
             lossFunc = lossFunction()
             # object numericalInterest to compute how a user likes items d
             nInterest = numericalInterest()
+    
     
             """
             pick a positive item d using algorithm 1
             """
             (u, d) = pickingPositiveItem(X,V)
             N=0
-            
             """
             pick a bar_d at random from D\Du
             """
-            
             bar_Du = lossFunc.getBarDu(X, u)
             bar_d = numpy.random.choice(bar_Du)
             
             f_d_u = nInterest.f_d(d,u,X,V)
             f_bar_d_u = nInterest.f_d(bar_d, u, X, V)
             
+            """
+            TO DO
+            """
             N += 1
             
-            while( (f_bar_d_u <= f_d_u - 1 ) or (N<len(bar_Du))):
+            while( (f_bar_d_u <= f_d_u - 1 ) and (N<len(bar_Du))):
                 bar_d = numpy.random.choice(bar_Du)
                 f_bar_d_u = nInterest.f_d(bar_d, u, X, V)
                 N += 1
                 
             if (f_bar_d_u > f_d_u -1):
-                """
-                make a gradient step to minimize
-                """
-                nrank = len(bar_Du) / N
-                
 #                print self.nom, "learning for the ", currentIteration, " time"
+                
+                nrank = len(bar_Du) / N
+#                print "N", N, "nrank", nrank
+                
                 if mutex.acquire(1):
-                    
                     V = lossFunc.SGD_Warp(X, V,u, d, bar_d, config.alpha,nrank)
                     V = lossFunc.constraintNorm(V)
                     countIteration += 1
+#                    print "iteration: ", countIteration
                     currentIteration = countIteration
                     mutex.release()
                     
@@ -129,8 +129,8 @@ startTime = time.time()
 p = preprocessData()
 inputFile = config.inputFile
 (X, test) = p.getTrainingData(inputFile)
-#print "X:"
-#print X
+print "X:"
+print X
 print test
 m = config.m
 mutex=thread.allocate_lock()
@@ -143,26 +143,21 @@ n = X.shape[1]
 """
 # matrix of approximation to learn
 V = model.model(m,n).getV()
-#print "V:", V
-
+    
 t1 = multiTaskLeaning_WARPLoss("t1")
-#t2 = multiTaskLeaning_WARPLoss("t2")
-#t3 = multiTaskLeaning_WARPLoss("t3")
-#t4 = multiTaskLeaning_WARPLoss("t4")
-##observer = computeLossAUC("ob")
-##observer.start()
+t2 = multiTaskLeaning_WARPLoss("t2")
+t3 = multiTaskLeaning_WARPLoss("t3")
+t4 = multiTaskLeaning_WARPLoss("t4")
+
 t1.start()
-#t2.start()
-#t3.start()
-#t4.start()
-#
+t2.start()
+t3.start()
+t4.start()
+
 t1.join()
-#t2.join()
-#t3.join()
-#t4.join()
-#t3.start()
-#t4.start()
-#time.sleep(10)
+t2.join()
+t3.join()
+t4.join()
 
 lossFunc = lossFunction()
         # initial loss before the loop

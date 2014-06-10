@@ -7,10 +7,11 @@
 This files implements most used functions. 
 """
 from numericalInterest import *
+#import scipy
 import numpy
 import config
 from numpy import linalg as LA
-import scipy
+
 
 class lossFunction:
     def __init__(self):
@@ -37,6 +38,7 @@ class lossFunction:
         """
         
         Du = self.getDu(X,u)
+        
         derivative_bar_d = numpy.sum(V[:, Du], axis=1)/len(Du)
         V[:,bar_d] = V[:,bar_d] - alpha*derivative_bar_d
         
@@ -55,17 +57,18 @@ class lossFunction:
         
         Du = self.getDu(X,u)
         derivative_bar_d = numpy.sum(V[:, Du], axis=1)/len(Du)
-        V[:,bar_d] = V[:,bar_d] - alpha*derivative_bar_d
+        new_alpha = alpha * self.Phi_concave(n)
+        
+        V[:,bar_d] = V[:,bar_d] - new_alpha*derivative_bar_d
         
         derivative_i = (V[:,bar_d] - V[:, d])/len(Du)
         for i in Du:
-            V[:,i] = V[:, i] - alpha * derivative_i
+            V[:,i] = V[:, i] - new_alpha*derivative_i
         
 #        derivative_d = (V[:,d]-V[:,bar_d] - numpy.sum(V[:, Du], axis=1))/len(Du)
         derivative_d_plus =  (- numpy.sum(V[:, Du], axis=1))/len(Du)
-        V[:,d] = V[:,d] - self.Phi_concave(n) * alpha * derivative_d_plus
-        
-        
+        V[:,d] = V[:,d] - new_alpha * derivative_d_plus
+        return V
         
     def constraintNorm(self, V):
         """
@@ -145,12 +148,12 @@ class lossFunction:
             '''
             
             res_Du, res_bar_Du = numpy.meshgrid(fu_bar_Du, fu_Du)
-            funcG = 1 - res_Du + res_bar_Du
+            funcG = 0 -(res_Du - 1 - res_bar_Du)
             
             #res = (funcG[(funcG>0).nonzero()])
-            res_temp = bincount(((funcG>0).nonzero())[0])
+            res_temp = numpy.bincount(((funcG>=0).nonzero())[0])
             res = self.Phi_array(res_temp)
-
+        
             loss += sum(res)
             
             """
@@ -206,8 +209,8 @@ class lossFunction:
             Part 1: compute AUCCLoss_u
             '''
             res_Du, res_bar_Du = numpy.meshgrid(fu_Du, fu_bar_Du)
-            funcG = 1 - res_Du + res_bar_Du
-            res = sum(funcG[(funcG>0).nonzero()])
+            funcG = 1- res_Du + res_bar_Du
+            res = sum(funcG[(funcG>=0).nonzero()])
 
             loss += res
             
@@ -242,12 +245,37 @@ class lossFunction:
         """
         Computes the loss function for a single user, using WARP algorithm
         f_warp(u)
-        """
-        resLoss = 0
-        for d in self.getDu(X, u):
-            resLoss += self.Phi_concave(self.rank(X,V, d, u))
+        """        
+        nInterest = numericalInterest()
+        
+        loss = 0
+        
+        Du = self.getDu(X, u)
+        bar_Du = self.getBarDu(X, u)
+        
+        fu = nInterest.f(u,X,V)
+        fu_Du = fu[Du]
+        fu_bar_Du = fu[bar_Du]
+            
+        '''
+        Part 1: compute WARPLoss_u
+        '''
+            
+        res_Du, res_bar_Du = numpy.meshgrid(fu_bar_Du, fu_Du)
+#        funcG = res_Du -1- res_bar_Du
+        funcG = 0 -(res_Du - 1 - res_bar_Du)
+            
+            #res = (funcG[(funcG>0).nonzero()])
+        res_temp = numpy.bincount(((funcG>=0).nonzero())[0])
+        res = self.Phi_array(res_temp)
 
-        return resLoss
+        loss += sum(res)
+            
+#        resLoss = 0
+#        for d in self.getDu(X, u):
+#            resLoss += self.Phi_concave(self.rank(X,V, d, u))
+
+        return loss
 
         
     def WARPLoss(self, X, V):
@@ -269,7 +297,7 @@ class lossFunction:
         return eta * C
         
     def Phi_array(self, a):
-        res = zeros(len(a))
+        res = numpy.zeros(len(a))
         
         for i in range( len(a)):
             res[i] = self.Phi_concave(a[i])
@@ -282,8 +310,8 @@ class lossFunction:
         """
 
         res = 0.0
-        for i in range(eta):
-            res += 1.0/(i+1)
+        for i in range(1,eta+1):
+            res += 1.0/(i)
         return res
             
     def rank(self, X, V, d, u ):
