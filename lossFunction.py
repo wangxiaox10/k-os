@@ -140,6 +140,7 @@ class lossFunction:
             bar_Du = self.getBarDu(X, u)
         
             fu = nInterest.f(u,X,V)
+            
             fu_Du = fu[Du]
             fu_bar_Du = fu[bar_Du]
             
@@ -159,9 +160,25 @@ class lossFunction:
             """
             Part 2: compute prediction
             """
+            Du = self.getDu(X, u)
+            bar_Du = self.getBarDu(X, u)
+        
+            fu = nInterest.f(u,X,V)
+            
+            fu_Du = fu[Du]
+            fu_bar_Du = fu[bar_Du]
+            
+            
+            
             f_u_testing_items = fu[test[u].astype(int)]
             fu_bar_Du.sort()
             testingItemRank = len(fu_bar_Du) - numpy.searchsorted(fu_bar_Du, f_u_testing_items)
+            
+            if u == 28:
+                print "test[u]:", test[u], "f_test:", f_u_testing_items
+                f_temp = fu_bar_Du[::-1]
+                print "f_bar_Du:", f_temp[:5]
+                print "rank:", testingItemRank
             
             mean_rank = numpy.mean(testingItemRank)
             max_rank = numpy.max(testingItemRank)
@@ -220,9 +237,11 @@ class lossFunction:
             """
             Part 2: compute prediction
             """
-            f_u_testing_items = fu[test[u].astype(int)]
+            f_u_testing_items = nInterest.f_set(test[u].astype(int),X,V)
             fu_bar_Du.sort()
             testingItemRank = len(fu_bar_Du) - numpy.searchsorted(fu_bar_Du, f_u_testing_items)
+            print "f_u_testing_items:", f_u_testing_itemsS
+            print "fu_bar_Du:", fu_bar_Du[:5]
             
             mean_rank = numpy.mean(testingItemRank)
             max_rank = numpy.max(testingItemRank)

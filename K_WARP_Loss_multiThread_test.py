@@ -85,7 +85,7 @@ class multiTaskLeaning_WARPLoss(threading.Thread):
                     currentIteration = countIteration
                     mutex.release()
                     
-                    if( currentIteration % 20 == 0):
+                    if( currentIteration % 200 == 0):
                         observationThread = computeLossWARP(str(currentIteration))
                         observationThread.start()
                         
@@ -103,7 +103,7 @@ class computeLossWARP(threading.Thread):
         
         
     def run(self): 
-        print self.nom, "start observing"
+#        print self.nom, "start observing"
         global X
         global V
         global test
