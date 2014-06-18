@@ -46,7 +46,7 @@ def showOutput():
     plt.plot( maxRankList, 'g-',label="maxRank")
     plt.xlabel('iterations')
     plt.ylabel("rank")
-    plt.legend(loc='upper right')
+    plt.legend(loc='center right')
 
 #    legend([meanRankList, maxRankList], ["meanRankList", "maxRankList"])
     plt.draw()
@@ -56,7 +56,7 @@ def showOutput():
     plt.plot(precisionAt10List, 'b-', label="P@10")
     plt.xlabel('iterations')
     plt.ylabel("precision")
-    plt.legend(loc="upper right")
+    plt.legend(loc="lower right")
 #    legend([precisionAt1List,precisionAt10List],["precision@1", "precision@10"])     
     plt.draw()
     
