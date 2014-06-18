@@ -70,6 +70,25 @@ class lossFunction:
         V[:,d] = V[:,d] - new_alpha * derivative_d_plus
         return V
         
+    def constraintNorm_bak(self, V):
+        """
+        Check for each j, if the norm of Vj is smaller than C which is defined in config.py
+        if not, do the normalisation: Vj = Vj*C/||Vj||
+        """
+        V_norm = LA.norm(V, axis=0)
+        need_to_normalize = numpy.sum((V_norm> config.C).astype(float))
+        
+        if( need_to_normalize > 0 ):
+            normalizator = max(V_norm)
+#        index_to_normalize = (V_norm> 1).astype(float)
+            V = V / normalizator
+#        normalizator = numpy.divide(index_to_normalize, V_norm, dtype=float)
+#        normalizator = normalizator * config.C
+#        temp2 = 1-index_to_normalize
+#        normalizator = normalizator + temp2
+#        V = V * normalizator
+        return V
+        
     def constraintNorm(self, V):
         """
         Check for each j, if the norm of Vj is smaller than C which is defined in config.py
@@ -135,6 +154,9 @@ class lossFunction:
         precisionAt1 = 0
         precisionAt10 = 0
         
+        recallAt1 = 0
+        recallAt10 = 0
+        
         for u in range(nUser):
             Du = self.getDu(X, u)
             bar_Du = self.getBarDu(X, u)
@@ -174,11 +196,11 @@ class lossFunction:
             fu_bar_Du.sort()
             testingItemRank = len(fu_bar_Du) - numpy.searchsorted(fu_bar_Du, f_u_testing_items)
             
-            if u == 28:
-                print "test[u]:", test[u], "f_test:", f_u_testing_items
-                f_temp = fu_bar_Du[::-1]
-                print "f_bar_Du:", f_temp[:5]
-                print "rank:", testingItemRank
+#            if u == 28:
+#                print "test[u]:", test[u], "f_test:", f_u_testing_items
+#                f_temp = fu_bar_Du[::-1]
+#                print "f_bar_Du:", f_temp[:5]
+#                print "rank:", testingItemRank
             
             mean_rank = numpy.mean(testingItemRank)
             max_rank = numpy.max(testingItemRank)
@@ -187,11 +209,22 @@ class lossFunction:
             sumMeanRank += mean_rank
             sumMaxRank += max_rank
             
+            
+            
             precisionAt1 += numpy.count_nonzero(testingItemRank <= 1)
             precisionAt10 += numpy.count_nonzero(testingItemRank <= 10)
-                
-        print "Iteration:", numIteration, "mean_rank:", sumMeanRank, "max_rank:", sumMaxRank, "precision@1:", precisionAt1, "precision@10:", precisionAt10
-        resStr =  str(numIteration) + " " + str(sumMeanRank) + " "+str(sumMaxRank)+" "+str(precisionAt1)+" " + str(precisionAt10) +"\n"
+            
+            recallAt1 += numpy.count_nonzero(testingItemRank <= 1) / (len(Du) + 0.0)
+            recallAt10 += numpy.count_nonzero(testingItemRank <= 10) / (len(Du) + 0.0)
+            
+        averagedMeanRank = (sumMeanRank + 0.0) / nUser
+        averagedMaxRank = (sumMaxRank + 0.0) / nUser
+        
+        precisionAt1 = (0.0 + precisionAt1) /(5 * nUser)
+        precisionAt10 = (0.0 + precisionAt10) / (5 * nUser)
+        
+        print "Iteration:", numIteration, "mean_rank:", averagedMeanRank, "max_rank:", averagedMaxRank, "precision@1:", precisionAt1, "precision@10:", precisionAt10, "recall@1:", recallAt1, "recall@10", recallAt10
+        resStr =  str(numIteration) + " " + str(averagedMeanRank) + " "+str(averagedMaxRank)+" "+str(precisionAt1)+" " + str(precisionAt10) +"\n"
     
         f_output = open(config.outputFile2, 'a')
         f_output.write(resStr)

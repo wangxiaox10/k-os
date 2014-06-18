@@ -78,11 +78,13 @@ class multiTaskLeaning_WARPLoss(threading.Thread):
 #                print "N", N, "nrank", nrank
                 
                 if mutex.acquire(1):
-                    V = lossFunc.SGD_Warp(X, V,u, d, bar_d, config.alpha,nrank)
-                    V = lossFunc.constraintNorm(V)
+                    
                     countIteration += 1
 #                    print "iteration: ", countIteration
                     currentIteration = countIteration
+#                    V = lossFunc.SGD_Warp(X, V,u, d, bar_d, config.alpha,nrank)
+                    V = lossFunc.SGD_Warp(X, V,u, d, bar_d, (1.0/(currentIteration/20 + 1)),nrank)
+                    V = lossFunc.constraintNorm(V)
                     mutex.release()
                     
                     if( currentIteration % 200 == 0):
