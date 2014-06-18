@@ -24,7 +24,10 @@ def showOutput():
     loss  = loss[Iteration.argsort()]
     
     fig1 = plt.figure()
-    plt.plot(Iteration[Iteration.argsort()], loss)
+    plt.plot(Iteration[Iteration.argsort()], loss, label="k-os loss")
+    plt.xlabel('iterations')
+    plt.ylabel('loss')
+    plt.legend(loc="upper right")
     plt.draw()
     
     fig2 = plt.figure()
@@ -39,14 +42,22 @@ def showOutput():
     meanRankList = meanRankList[Iteration2.argsort()]
     maxRankList = maxRankList[Iteration2.argsort()]
     
-    plt.plot( meanRankList, 'r-')
-    plt.plot( maxRankList, 'g-')
+    plt.plot( meanRankList, 'r-',label="meanRank")
+    plt.plot( maxRankList, 'g-',label="maxRank")
+    plt.xlabel('iterations')
+    plt.ylabel("rank")
+    plt.legend(loc='upper right')
+
+#    legend([meanRankList, maxRankList], ["meanRankList", "maxRankList"])
     plt.draw()
     
     fig3 = plt.figure()
-    plt.plot(precisionAt1List, 'y-')
-    plt.plot(precisionAt10List, 'b-')
-    
+    plt.plot(precisionAt1List, 'y-', label="P@1")
+    plt.plot(precisionAt10List, 'b-', label="P@10")
+    plt.xlabel('iterations')
+    plt.ylabel("precision")
+    plt.legend(loc="upper right")
+#    legend([precisionAt1List,precisionAt10List],["precision@1", "precision@10"])     
     plt.draw()
     
 showOutput()
